@@ -3,6 +3,7 @@ This module defines Bazel targets for the mainnet versions of some of the publis
 """
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
+load("@subnets//:defs.bzl", "POCKET_IC_REV", "POCKET_IC_SHA256")
 
 # This variable is automatically kept in sync by ci/scripts/update-mainnet-artifacts.sh
 # with the IC version (git revision) of the mainnet NNS subnet (tdb26-...) tracked in testnet/mainnet_revisions.json
@@ -31,6 +32,8 @@ def mainnet_binary_gzs():
     """
     Declares Bazel targets for the gz-compressed mainnet versions of published binaries (/publish/binaries)
     """
+    print("Would like to use pocket IC rev " + POCKET_IC_REV)
+    print("And sha256 " + POCKET_IC_SHA256)
     for binary_name, bin in PUBLISHED_BINARIES.items():
         http_file(
             name = "mainnet-" + binary_name + ".gz",

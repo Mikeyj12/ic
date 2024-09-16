@@ -4,8 +4,6 @@ workspace(
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file", "http_jar")
 load("//third_party/lmdb:repository.bzl", "lmdb_repository")
-load("mainnet-artifacts.bzl", "mainnet_binary_gzs")
-load("mainnet-canisters.bzl", "mainnet_ck_canisters", "mainnet_core_nns_canisters", "mainnet_sns_canisters")
 
 http_archive(
     name = "aspect_rules_sol",
@@ -419,8 +417,17 @@ load("//bazel:dfx.bzl", "dfx")
 
 dfx(name = "dfx")
 
+# load subnet data
+load("//bazel:subnets.bzl", "subnets")
+subnets(
+    name = "subnets",
+    path = "//:subnets.json",
+)
+
 # sns-quill for SNS testing
 load("//bazel:sns_quill.bzl", "sns_quill")
+load("mainnet-artifacts.bzl", "mainnet_binary_gzs")
+load("mainnet-canisters.bzl", "mainnet_ck_canisters", "mainnet_core_nns_canisters", "mainnet_sns_canisters")
 
 sns_quill(name = "sns_quill")
 
