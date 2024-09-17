@@ -81,6 +81,10 @@ fn current_binary_path() -> Option<PathBuf> {
 
 fn main() {
     let current_binary_path = current_binary_path().unwrap();
+    // TODO: why does this just hang the test
+    if true {
+        panic!("Nope");
+    }
     let current_binary_name = current_binary_path.file_name().unwrap().to_str().unwrap();
     if current_binary_name != "pocket-ic" && current_binary_name != "pocket-ic-server" {
         panic!("The PocketIc server binary name must be \"pocket-ic\" or \"pocket-ic-server\" (without quotes).")
