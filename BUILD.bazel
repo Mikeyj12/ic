@@ -89,6 +89,7 @@ compile_pip_requirements(
     requirements_in = "requirements.in",
     requirements_txt = "requirements.txt",
     tags = [
+        # TODO: remove?
         "requires-network",
     ],
 )

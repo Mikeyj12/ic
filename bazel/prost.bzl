@@ -15,7 +15,8 @@ def generated_files_check(name, srcs, deps, data, manifest_dir):
         ],
         env = {
             "PROTOC": "$(rootpath @com_google_protobuf//:protoc)",
-            "PROTOC_INCLUDE": "external/com_github_protocolbuffers_protobuf/src",
+            # TODO: necessary?
+            "PROTOC_INCLUDE": "external/com_google_protobuf/src",
             "CARGO_MANIFEST_DIR": manifest_dir,
             "RUSTFMT": "$(rootpath @rules_rust//rust/toolchain:current_rustfmt_files)",
         },
@@ -42,7 +43,7 @@ def protobuf_generator(name, srcs, manifest_dir, deps = [], data = []):
         srcs = ["//bazel:prost_generator.sh"],
         env = {
             "PROTOC": "$(location @com_google_protobuf//:protoc)",
-            "PROTOC_INCLUDE": "external/com_github_protocolbuffers_protobuf/src",
+            "PROTOC_INCLUDE": "external/com_google_protobuf/src",
             "CARGO_MANIFEST_DIR": manifest_dir,
             "GENERATOR": "$(location :%s)" % binary_name,
             "RUSTFMT": "$(rootpath @rules_rust//rust/toolchain:current_rustfmt_files)",
