@@ -83,15 +83,12 @@ alias(
 )
 
 # Builds python dependencies
+# $ bazel run //:python-requirements.update
+# TODO: add CI check to ensure requirements.txt is up-to-date
 compile_pip_requirements(
     name = "python-requirements",
-    timeout = "moderate",
-    requirements_in = "requirements.in",
+    src = "requirements.in",
     requirements_txt = "requirements.txt",
-    tags = [
-        # TODO: remove?
-        "requires-network",
-    ],
 )
 
 test_suite(

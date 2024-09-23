@@ -55,32 +55,6 @@ sol_register_toolchains(
     sol_version = "0.8.18",
 )
 
-#http_archive(
-#    name = "io_bazel_rules_go",
-#    sha256 = "6dc2da7ab4cf5d7bfc7c949776b1b7c733f05e56edc4bcd9022bb249d2e2a996",
-#    urls = [
-#        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.39.1/rules_go-v0.39.1.zip",
-#        "https://github.com/bazelbuild/rules_go/releases/download/v0.39.1/rules_go-v0.39.1.zip",
-#    ],
-#)
-
-#http_archive(
-#    name = "bazel_gazelle",
-#    sha256 = "8ad77552825b078a10ad960bec6ef77d2ff8ec70faef2fd038db713f410f5d87",
-#    urls = [
-#        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.38.0/bazel-gazelle-v0.38.0.tar.gz",
-#    ],
-#)
-#
-#load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
-#load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
-
-#go_rules_dependencies()
-#
-#go_register_toolchains(go_version = "1.20.5")
-
-#gazelle_dependencies(go_repository_default_config = "//:WORKSPACE.bazel")
-
 http_archive(
     name = "rules_rust",
     integrity = "sha256-JLN47ZcAbx9wEr5Jiib4HduZATGLiDgK7oUi/fvotzU=",
@@ -475,32 +449,32 @@ http_file(
 
 # Import Python rules
 
-http_archive(
-    name = "rules_python",
-    sha256 = "9d04041ac92a0985e344235f5d946f71ac543f1b1565f2cdbc9a2aaee8adf55b",
-    strip_prefix = "rules_python-0.26.0",
-    url = "https://github.com/bazelbuild/rules_python/releases/download/0.26.0/rules_python-0.26.0.tar.gz",
-)
-
-load("@rules_python//python:repositories.bzl", "python_register_toolchains")
-
-python_register_toolchains(
-    name = "python3_10",
-    python_version = "3.10",
-)
-
-load("@python3_10//:defs.bzl", "interpreter")
-load("@rules_python//python:pip.bzl", "pip_parse")
-
-pip_parse(
-    name = "python_deps",
-    python_interpreter_target = interpreter,
-    requirements_lock = "//:requirements.txt",
-)
-
-load("@python_deps//:requirements.bzl", "install_deps")
-
-install_deps()
+#http_archive(
+#    name = "rules_python",
+#    sha256 = "9d04041ac92a0985e344235f5d946f71ac543f1b1565f2cdbc9a2aaee8adf55b",
+#    strip_prefix = "rules_python-0.26.0",
+#    url = "https://github.com/bazelbuild/rules_python/releases/download/0.26.0/rules_python-0.26.0.tar.gz",
+#)
+#
+#load("@rules_python//python:repositories.bzl", "python_register_toolchains")
+#
+#python_register_toolchains(
+#    name = "python3_10",
+#    python_version = "3.10",
+#)
+#
+#load("@python3_10//:defs.bzl", "interpreter")
+#load("@rules_python//python:pip.bzl", "pip_parse")
+#
+#pip_parse(
+#    name = "python_deps",
+#    python_interpreter_target = interpreter,
+#    requirements_lock = "//:requirements.txt",
+#)
+#
+#load("@python_deps//:requirements.bzl", "install_deps")
+#
+#install_deps()
 
 # Financial Integration artifacts for upgrade testing
 
@@ -807,7 +781,3 @@ http_file(
     sha256 = "bf3987bd483cf710ff0c54134350ca188c29ff0fdd38567aa4df5e74131543e4",
     url = "https://raw.githubusercontent.com/dfinity/interface-spec/a82220c1156f5e3e80ea65be6a4f69b766cbe6d1/spec/_attachments/ic.did",
 )
-
-load("//rs/tests:kubeconfig.bzl", "kubeconfig")
-
-kubeconfig()
