@@ -1,4 +1,4 @@
-load("@bazel_gazelle//:def.bzl", "gazelle")
+load("@gazelle//:def.bzl", "gazelle")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 
 package(default_visibility = ["//visibility:public"])
@@ -78,7 +78,7 @@ gazelle(
 
 alias(
     name = "gobin",
-    actual = "@go_sdk//:bin/go",
+    actual = "@rules_go//go",
     visibility = ["//visibility:public"],
 )
 

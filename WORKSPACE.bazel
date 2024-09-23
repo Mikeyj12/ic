@@ -55,31 +55,31 @@ sol_register_toolchains(
     sol_version = "0.8.18",
 )
 
-http_archive(
-    name = "io_bazel_rules_go",
-    sha256 = "6dc2da7ab4cf5d7bfc7c949776b1b7c733f05e56edc4bcd9022bb249d2e2a996",
-    urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.39.1/rules_go-v0.39.1.zip",
-        "https://github.com/bazelbuild/rules_go/releases/download/v0.39.1/rules_go-v0.39.1.zip",
-    ],
-)
+#http_archive(
+#    name = "io_bazel_rules_go",
+#    sha256 = "6dc2da7ab4cf5d7bfc7c949776b1b7c733f05e56edc4bcd9022bb249d2e2a996",
+#    urls = [
+#        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.39.1/rules_go-v0.39.1.zip",
+#        "https://github.com/bazelbuild/rules_go/releases/download/v0.39.1/rules_go-v0.39.1.zip",
+#    ],
+#)
 
-http_archive(
-    name = "bazel_gazelle",
-    sha256 = "8ad77552825b078a10ad960bec6ef77d2ff8ec70faef2fd038db713f410f5d87",
-    urls = [
-        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.38.0/bazel-gazelle-v0.38.0.tar.gz",
-    ],
-)
+#http_archive(
+#    name = "bazel_gazelle",
+#    sha256 = "8ad77552825b078a10ad960bec6ef77d2ff8ec70faef2fd038db713f410f5d87",
+#    urls = [
+#        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.38.0/bazel-gazelle-v0.38.0.tar.gz",
+#    ],
+#)
+#
+#load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
+#load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
 
-load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
-load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
+#go_rules_dependencies()
+#
+#go_register_toolchains(go_version = "1.20.5")
 
-go_rules_dependencies()
-
-go_register_toolchains(go_version = "1.20.5")
-
-gazelle_dependencies(go_repository_default_config = "//:WORKSPACE.bazel")
+#gazelle_dependencies(go_repository_default_config = "//:WORKSPACE.bazel")
 
 http_archive(
     name = "rules_rust",
@@ -126,9 +126,9 @@ http_archive(
     ],
 )
 
-load("//:go_deps.bzl", "go_dependencies")
+#load("//:go_deps.bzl", "go_dependencies")
 
-go_dependencies()
+#go_dependencies()
 
 load("//bazel:external_crates.bzl", "external_crates_repository")
 load("//bazel/sanitizers_enabled_env:defs.bzl", "sanitizers_enabled_env")
