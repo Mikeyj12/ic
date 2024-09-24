@@ -131,8 +131,7 @@ oci.pull(
         "linux/amd64",
     ],
 )
-use_repo(oci, "static-file-server")
-use_repo(oci, "static-file-server_linux_amd64")
+use_repo(oci, "static-file-server", "static-file-server_linux_amd64")
 
 # bitcoin container used in test
 oci.pull(
@@ -142,8 +141,7 @@ oci.pull(
         "linux/amd64",
     ],
 )
-use_repo(oci, "bitcoind")
-use_repo(oci, "bitcoind_linux_amd64")
+use_repo(oci, "bitcoind", "bitcoind_linux_amd64")
 
 # Tracing image used in tests
 # we can't use the official image: https://github.com/bazel-contrib/rules_oci/issues/695
@@ -160,8 +158,7 @@ oci.pull(
         "linux/amd64",
     ],
 )
-use_repo(oci, "jaeger")
-use_repo(oci, "jaeger_linux_amd64")
+use_repo(oci, "jaeger", "jaeger_linux_amd64")
 
 # Used by tests
 oci.pull(
@@ -169,8 +166,7 @@ oci.pull(
     image = "docker.io/ryantk/minica@sha256:c67e2c1885d438b5927176295d41aaab8a72dd9e1272ba85054bfc78191d05b0",
     platforms = ["linux/amd64"],
 )
-use_repo(oci, "minica")
-use_repo(oci, "minica_linux_amd64")
+use_repo(oci, "minica", "minica_linux_amd64")
 
 # used by rosetta image
 oci.pull(
@@ -178,8 +174,7 @@ oci.pull(
     image = "gcr.io/distroless/cc-debian11@sha256:8e94f031353596c3fc9db6a2499bcc82dacc40cb71e0703476f9fad41677efdf",
     platforms = ["linux/amd64"],
 )
-use_repo(oci, "rust_base")
-use_repo(oci, "rust_base_linux_amd64")
+use_repo(oci, "rust_base", "rust_base_linux_amd64")
 
 # used in various places as base
 oci.pull(
@@ -187,8 +182,7 @@ oci.pull(
     image = "docker.io/library/ubuntu@sha256:965fbcae990b0467ed5657caceaec165018ef44a4d2d46c7cdea80a9dff0d1ea",
     platforms = ["linux/amd64"],
 )
-use_repo(oci, "ubuntu_base")
-use_repo(oci, "ubuntu_base_linux_amd64")
+use_repo(oci, "ubuntu_base", "ubuntu_base_linux_amd64")
 
 # used by boundary node tests
 oci.pull(
@@ -196,8 +190,7 @@ oci.pull(
     image = "docker.io/coredns/coredns@sha256:be7652ce0b43b1339f3d14d9b14af9f588578011092c1f7893bd55432d83a378",
     platforms = ["linux/amd64"],
 )
-use_repo(oci, "coredns")
-use_repo(oci, "coredns_linux_amd64")
+use_repo(oci, "coredns", "coredns_linux_amd64")
 
 # used by custom domains tests
 oci.pull(
@@ -205,22 +198,19 @@ oci.pull(
     image = "docker.io/letsencrypt/pebble@sha256:fc5a537bf8fbc7cc63aa24ec3142283aa9b6ba54529f86eb8ff31fbde7c5b258",
     platforms = ["linux/amd64"],
 )
-use_repo(oci, "pebble")
-use_repo(oci, "pebble_linux_amd64")
+use_repo(oci, "pebble", "pebble_linux_amd64")
 oci.pull(
     name = "python3",
     image = "docker.io/library/python@sha256:0a56f24afa1fc7f518aa690cb8c7be661225e40b157d9bb8c6ef402164d9faa7",
     platforms = ["linux/amd64"],
 )
-use_repo(oci, "python3")
-use_repo(oci, "python3_linux_amd64")
+use_repo(oci, "python3", "python3_linux_amd64")
 oci.pull(
     name = "alpine_openssl",
     image = "docker.io/alpine/openssl@sha256:cf89651f07a33d2faf4499f72e6f8b0ee2542cd40735d51c7e75b8965c17af0e",
     platforms = ["linux/amd64"],
 )
-use_repo(oci, "alpine_openssl")
-use_repo(oci, "alpine_openssl_linux_amd64")
+use_repo(oci, "alpine_openssl", "alpine_openssl_linux_amd64")
 
 # Kubernetes helper
 
