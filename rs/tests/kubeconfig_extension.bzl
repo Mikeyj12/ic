@@ -1,3 +1,5 @@
+"""Hello"""
+
 load(":kubeconfig.bzl", "kubeconfig")
 
 kubeconfig_extension = module_extension(
