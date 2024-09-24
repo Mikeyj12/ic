@@ -82,12 +82,14 @@ alias(
     visibility = ["//visibility:public"],
 )
 
-# Builds python dependencies
+# Builds python dependencies. To update the lockfile:
 # $ bazel run //:python-requirements.update
-# TODO: add CI check to ensure requirements.txt is up-to-date
 compile_pip_requirements(
     name = "python-requirements",
     src = "requirements.in",
+    # NOTE: the requirements.txt reports the system python's version, not
+    # the one specified in MODULE.bazel.
+    # https://rules-python.readthedocs.io/en/latest/pypi-dependencies.html#pip-rules
     requirements_txt = "requirements.txt",
 )
 

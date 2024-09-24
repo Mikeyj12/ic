@@ -1,7 +1,17 @@
-# TODO: check lockfile on CI
+# Bazel modules for the IC build.
+# NOTE: Some dependencies are still listed in the WORKSPACE file. See WORKSPACE
+# for details.
+
 module(
     name = "ic",
 )
+
+# General Bazel helpers
+
+bazel_dep(name = "bazel_skylib", version = "1.7.1")
+bazel_dep(name = "aspect_bazel_lib", version = "2.9.0")
+
+# Python dependencies
 
 bazel_dep(name = "rules_python", version = "0.35.0")
 
@@ -18,21 +28,76 @@ pip.parse(
 )
 use_repo(pip, "python_deps")
 
-bazel_dep(name = "rules_go", version = "0.50.1")
-bazel_dep(name = "gazelle", version = "0.38.0")
-
-# NOTE for closure
-
+# Protobuf dependencies
 bazel_dep(
     name = "protobuf",
     version = "28.2",
     repo_name = "com_google_protobuf",  # needed for rules_closure to find it
 )
 
+# Closure (JS framework) dependencies
+
+bazel_dep(name = "rules_java", version = "7.11.1")
+
+# Go dependencies
+
+bazel_dep(name = "rules_go", version = "0.50.1")
+bazel_dep(name = "gazelle", version = "0.38.0")
+
 go_deps = use_extension("@gazelle//:extensions.bzl", "go_deps")
 go_deps.from_file(go_mod = "//:go.mod")
 
-# TODO: figure out why reported as indirect deps
+# All direct go deps
+go_deps.module(
+    path = "github.com/fatih/color",
+    sum = "h1:8LOYc1KYPPmyKMuN8QV2DNRWNbLo6LZ0iLs8+mlH53w=",
+    version = "v1.13.0",
+)
+go_deps.module(
+    path = "github.com/golang/protobuf",
+    sum = "h1:ROPKBNFfQgOUMifHyP+KYbvpjbdoFNs+aK7DXlji0Tw=",
+    version = "v1.5.2",
+)
+go_deps.module(
+    path = "github.com/google/go-cmp",
+    sum = "h1:O2Tfq5qg4qc4AmwVlvv0oLiVAGB7enBSJ2x2DqQFi38=",
+    version = "v0.5.9",
+)
+go_deps.module(
+    path = "github.com/honeycombio/beeline-go",
+    sum = "h1:cyrfwgxM32DKzUhZFJ0KLbPkoyf5lHOyn+7GISwEVZQ=",
+    version = "v1.11.1",
+)
+go_deps.module(
+    path = "github.com/schollz/closestmatch",
+    sum = "h1:Uel2GXEpJqOWBrlyI+oY9LTiyyjYS17cCYRqP13/SHk=",
+    version = "v2.1.0+incompatible",
+)
+go_deps.module(
+    path = "github.com/spf13/cobra",
+    sum = "h1:o94oiPyS4KD1mPy2fmcYYHHfCxLqYjJOhGsCHFZtEzA=",
+    version = "v1.6.1",
+)
+go_deps.module(
+    path = "github.com/stretchr/testify",
+    sum = "h1:w7B6lhMri9wdJUVmEZPGGhZzrYTPvgJArz7wNPgYKsk=",
+    version = "v1.8.1",
+)
+go_deps.module(
+    path = "google.golang.org/genproto",
+    sum = "h1:wtujag7C+4D6KMoulW9YauvK2lgdvCMS260jsqqBXr0=",
+    version = "v0.0.0-20210602131652-f16073e35f0c",
+)
+go_deps.module(
+    path = "google.golang.org/grpc",
+    sum = "h1:WTLtQzmQori5FUH25Pq4WT22oCsv8USpQ+F6rqtsmxw=",
+    version = "v1.49.0",
+)
+go_deps.module(
+    path = "google.golang.org/protobuf",
+    sum = "h1:d0NfwRgPtno5B1Wa6L2DAG+KivqkdutMf1UhdNx175w=",
+    version = "v1.28.1",
+)
 use_repo(
     go_deps,
     "com_github_fatih_color",
@@ -45,18 +110,10 @@ use_repo(
     "org_golang_google_genproto",
     "org_golang_google_grpc",
     "org_golang_google_protobuf",
-    # Exported by gazelle specifically for rules_go.
-    "bazel_gazelle_go_repository_config",
 )
 
-# General Bazel helpers
-bazel_dep(name = "bazel_skylib", version = "1.7.1")
-bazel_dep(name = "aspect_bazel_lib", version = "2.9.0")
-
-# Protobuf rules
-bazel_dep(name = "rules_java", version = "7.11.1")  # NOTE: for closure
-
 # Docker/OCI & archive rules with image definitions
+
 bazel_dep(name = "rules_pkg", version = "1.0.1")
 bazel_dep(name = "rules_oci", version = "2.0.0")
 
@@ -112,7 +169,7 @@ oci.pull(
     image = "docker.io/ryantk/minica@sha256:c67e2c1885d438b5927176295d41aaab8a72dd9e1272ba85054bfc78191d05b0",
     platforms = ["linux/amd64"],
 )
-use_repo(oci, "minica")  # TODO: remove?
+use_repo(oci, "minica")
 use_repo(oci, "minica_linux_amd64")
 
 # used by rosetta image
@@ -164,6 +221,8 @@ oci.pull(
 )
 use_repo(oci, "alpine_openssl")
 use_repo(oci, "alpine_openssl_linux_amd64")
+
+# Kubernetes helper
 
 kubeconfig_ext = use_extension("//rs/tests:kubeconfig_extension.bzl", "kubeconfig_extension")
 use_repo(kubeconfig_ext, "kubeconfig")

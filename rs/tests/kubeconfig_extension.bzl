@@ -1,4 +1,4 @@
-"""Hello"""
+"""Module extension for loading k8s config"""
 
 load(":kubeconfig.bzl", "kubeconfig")
 
