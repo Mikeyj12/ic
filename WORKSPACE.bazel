@@ -90,20 +90,6 @@ load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_depende
 
 rules_foreign_cc_dependencies()
 
-#http_archive(
-#    name = "rules_proto",
-#    sha256 = "66bfdf8782796239d3875d37e7de19b1d94301e8972b3cbd2446b332429b4df1",
-#    strip_prefix = "rules_proto-4.0.0",
-#    urls = [
-#        "https://mirror.bazel.build/github.com/bazelbuild/rules_proto/archive/refs/tags/4.0.0.tar.gz",
-#        "https://github.com/bazelbuild/rules_proto/archive/refs/tags/4.0.0.tar.gz",
-#    ],
-#)
-#
-#load("//:go_deps.bzl", "go_dependencies")
-
-#go_dependencies()
-
 load("//bazel:external_crates.bzl", "external_crates_repository")
 load("//bazel/sanitizers_enabled_env:defs.bzl", "sanitizers_enabled_env")
 
@@ -221,8 +207,8 @@ http_archive(
 
 load("@io_bazel_rules_closure//closure:repositories.bzl", "rules_closure_dependencies", "rules_closure_toolchains")
 
-# problem:
-# com.google.protobuf.LazyStringArrayList.emptyList
+# we instruct rules_closure to omit some dependencies that we already
+# pull via MODULE.bazel
 rules_closure_dependencies(
     omit_com_google_protobuf = True,
     omit_rules_java = True,

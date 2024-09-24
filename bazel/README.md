@@ -209,7 +209,6 @@ rust_test(
 ## Python tests
 Python bazel targets are built very similarly and also include `py_test`, `py_library`, `py_binary`. Note that `py_library` is a python module which tests can import and test against. Test deps can either be a `py_library` or a `requirement`, see example below:
 
-TODO: fixme
 ```
 load("@python_deps//:requirements.bzl", "requirement")
 

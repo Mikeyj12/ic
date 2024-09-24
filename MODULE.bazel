@@ -32,7 +32,9 @@ use_repo(pip, "python_deps")
 bazel_dep(
     name = "protobuf",
     version = "28.2",
-    repo_name = "com_google_protobuf",  # needed for rules_closure to find it
+    # We need to give the repository an explicit name that rules_closure
+    # can find
+    repo_name = "com_google_protobuf",
 )
 
 # Closure (JS framework) dependencies
