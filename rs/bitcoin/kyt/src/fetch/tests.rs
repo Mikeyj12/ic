@@ -1,8 +1,8 @@
 use super::*;
-use crate::blocklist;
+use crate::{blocklist, CheckTransactionError};
 use bitcoin::{
-    absolute::LockTime, hashes::Hash, transaction::Version, Amount, OutPoint, PubkeyHash,
-    ScriptBuf, Sequence, Transaction, TxIn, TxOut, Witness,
+    absolute::LockTime, address::Address, hashes::Hash, transaction::Version, Amount, OutPoint,
+    PubkeyHash, ScriptBuf, Sequence, Transaction, TxIn, TxOut, Witness,
 };
 use ic_cdk::api::call::RejectionCode;
 use std::cell::RefCell;
@@ -169,7 +169,7 @@ fn test_try_fetch_tx() {
 
     // case Fetched
     let fetched_0 = FetchTxStatus::Fetched(FetchedTx {
-        tx: mock_transaction(),
+        tx: mock_transaction().try_into().unwrap(),
         input_addresses: vec![None],
     });
     state::set_fetch_status(txid_0, fetched_0.clone());
@@ -224,7 +224,7 @@ async fn test_fetch_tx() {
         Some(FetchTxStatus::Fetched(_))
     ));
     if let Ok(FetchResult::Fetched(fetched)) = result {
-        assert_eq!(fetched.tx, tx_0);
+        assert_eq!(fetched.tx, tx_0.try_into().unwrap());
         assert_eq!(fetched.input_addresses, vec![None, None]);
     } else {
         unreachable!()
@@ -272,7 +272,7 @@ async fn test_check_fetched() {
 
     // case Passed
     let fetched = FetchedTx {
-        tx: tx_0.clone(),
+        tx: tx_0.clone().try_into().unwrap(),
         input_addresses: vec![Some(good_address.clone())],
     };
     state::set_fetch_status(txid_0, FetchTxStatus::Fetched(fetched.clone()));
@@ -285,7 +285,7 @@ async fn test_check_fetched() {
 
     // case Failed
     let fetched = FetchedTx {
-        tx: tx_0.clone(),
+        tx: tx_0.clone().try_into().unwrap(),
         input_addresses: vec![Some(good_address.clone()), Some(bad_address)],
     };
     state::set_fetch_status(txid_0, FetchTxStatus::Fetched(fetched.clone()));
@@ -299,7 +299,7 @@ async fn test_check_fetched() {
     // case HighLoad
     env.high_load = true;
     let fetched = FetchedTx {
-        tx: tx_0.clone(),
+        tx: tx_0.clone().try_into().unwrap(),
         input_addresses: vec![Some(good_address), None],
     };
     state::set_fetch_status(txid_0, FetchTxStatus::Fetched(fetched.clone()));
@@ -325,7 +325,7 @@ async fn test_check_fetched() {
     // case Pending: need 2 inputs, but only able to get 1 for now
     let env = MockEnv::new(get_tx_cycle_cost(INITIAL_MAX_RESPONSE_BYTES) * 3 / 2);
     let fetched = FetchedTx {
-        tx: tx_0.clone(),
+        tx: tx_0.clone().try_into().unwrap(),
         input_addresses: vec![None, None],
     };
     state::set_fetch_status(txid_0, FetchTxStatus::Fetched(fetched.clone()));
@@ -351,7 +351,7 @@ async fn test_check_fetched() {
     // case Passed: need 2 inputs, and getting both
     let env = MockEnv::new(CHECK_TRANSACTION_CYCLES_REQUIRED);
     let fetched = FetchedTx {
-        tx: tx_0.clone(),
+        tx: tx_0.clone().try_into().unwrap(),
         input_addresses: vec![None, None],
     };
     state::set_fetch_status(txid_0, FetchTxStatus::Fetched(fetched.clone()));
@@ -372,14 +372,14 @@ async fn test_check_fetched() {
     // case Passed: need 2 inputs, and 1 already exists in cache.
     let env = MockEnv::new(CHECK_TRANSACTION_CYCLES_REQUIRED);
     let fetched = FetchedTx {
-        tx: tx_0.clone(),
+        tx: tx_0.clone().try_into().unwrap(),
         input_addresses: vec![None, None],
     };
     state::set_fetch_status(txid_0, FetchTxStatus::Fetched(fetched.clone()));
     state::set_fetch_status(
         txid_1,
         FetchTxStatus::Fetched(FetchedTx {
-            tx: tx_1.clone(),
+            tx: tx_1.clone().try_into().unwrap(),
             input_addresses: vec![],
         }),
     );
@@ -398,7 +398,7 @@ async fn test_check_fetched() {
     // case Pending: need 2 input, but 1 of them gives RetryWithBiggerBuffer error.
     let env = MockEnv::new(CHECK_TRANSACTION_CYCLES_REQUIRED);
     let fetched = FetchedTx {
-        tx: tx_0.clone(),
+        tx: tx_0.clone().try_into().unwrap(),
         input_addresses: vec![None, None],
     };
     state::set_fetch_status(txid_0, FetchTxStatus::Fetched(fetched.clone()));
@@ -429,7 +429,7 @@ async fn test_check_fetched() {
     // case Error: need 2 input, but 1 of them keeps giving RetryWithBiggerBuffer error.
     let env = MockEnv::new(CHECK_TRANSACTION_CYCLES_REQUIRED);
     let fetched = FetchedTx {
-        tx: tx_0.clone(),
+        tx: tx_0.try_into().unwrap(),
         input_addresses: vec![None, None],
     };
     state::set_fetch_status(txid_0, FetchTxStatus::Fetched(fetched.clone()));
