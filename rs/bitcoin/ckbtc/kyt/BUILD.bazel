@@ -75,6 +75,6 @@ rust_ic_test(
 )
 
 pocket_ic_mainnet_test(
-    name = "kyt_integration_tests_mainnet",
+    name = "kyt_integration_test_mainnet",
     test = ":kyt_integration_test",
 )

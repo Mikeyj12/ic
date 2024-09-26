@@ -1,10 +1,9 @@
 load("@bazel_gazelle//:def.bzl", "gazelle")
-load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 load("@bazel_skylib//rules:common_settings.bzl", "string_setting")
 load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
+load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 
 package(default_visibility = ["//visibility:public"])
-
 
 # TODO: pocket-ic = any pocket ic; pocket-ic-VERSIOn: specific and always the same
 genrule(
@@ -15,31 +14,31 @@ genrule(
 )
 
 string_setting(
-    name = "pocketic_variant",
+    name = "pocket-ic-variant",
     build_setting_default = "head",
     visibility = ["//visibility:public"],
 )
 
 config_setting(
-    name = "pocketic_head",
+    name = "pocket-ic-variant-head",
     flag_values = {
-        ":pocketic_variant": "head",
+        ":pocket-ic-variant": "head",
     },
 )
 
 config_setting(
-    name = "pocketic_mainnet",
+    name = "pocket-ic-variant-mainnet",
     flag_values = {
-        ":pocketic_variant": "mainnet",
+        ":pocket-ic-variant": "mainnet",
     },
 )
 
 copy_file(
-    name = "pocket_ic",
+    name = "pocket-ic-server",
     testonly = True,  # WHY
     src = select({
-        ":pocketic_mainnet": "//:pocket-ic-mainnet",
-        ":pocketic_head": "//rs/pocket_ic_server:pocket-ic-server",
+        ":pocket-ic-variant-mainnet": "//:pocket-ic-mainnet",
+        ":pocket-ic-variant-head": "//rs/pocket_ic_server:pocket-ic-server",
         "//conditions:default": "//rs/pocket_ic_server:pocket-ic-server",
     }),
     out = "pocket-ic-server",

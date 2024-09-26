@@ -1,21 +1,23 @@
+"""Foo bar"""
+
 load("@bazel_skylib//lib:paths.bzl", "paths")
 
-def _pocket_ic_mainnet_transition_impl(_settings, attr):
+def _pocket_ic_mainnet_transition_impl(_settings, _attr):
     return {
-        "//:pocketic_variant": "mainnet",
+        "//:pocket-ic-variant": "mainnet",
     }
 
 pocket_ic_mainnet_transition = transition(
     implementation = _pocket_ic_mainnet_transition_impl,
     inputs = [],
     outputs = [
-        "//:pocketic_variant",
+        "//:pocket-ic-variant",
     ],
 )
 
-TestAspectInfo = provider(fields = ["args", "env"])
+TestAspectInfo = provider("some descr", fields = ["args", "env"])
 
-def _test_aspect_impl(target, ctx):
+def _test_aspect_impl(_target, ctx):
     data = getattr(ctx.rule.attr, "data", [])
     args = getattr(ctx.rule.attr, "args", [])
     env = getattr(ctx.rule.attr, "env", [])
