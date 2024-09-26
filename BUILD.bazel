@@ -1,6 +1,5 @@
 load("@bazel_gazelle//:def.bzl", "gazelle")
 load("@bazel_skylib//rules:common_settings.bzl", "string_setting")
-load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 
 package(default_visibility = ["//visibility:public"])
@@ -33,17 +32,26 @@ config_setting(
     },
 )
 
-copy_file(
+alias(
     name = "pocket-ic-server",
-    testonly = True,  # WHY
-    src = select({
+    actual = select({
         ":pocket-ic-variant-mainnet": "//:pocket-ic-mainnet",
         ":pocket-ic-variant-head": "//rs/pocket_ic_server:pocket-ic-server",
         "//conditions:default": "//rs/pocket_ic_server:pocket-ic-server",
     }),
-    out = "pocket-ic-server",
-    is_executable = True,
 )
+
+#copy_file(
+#    name = "pocket-ic-server",
+#    testonly = True,  # WHY
+#    src = select({
+#        ":pocket-ic-variant-mainnet": "//:pocket-ic-mainnet",
+#        ":pocket-ic-variant-head": "//rs/pocket_ic_server:pocket-ic-server",
+#        "//conditions:default": "//rs/pocket_ic_server:pocket-ic-server",
+#    }),
+#    out = "pocket-ic-server",
+#    is_executable = True,
+#)
 
 # WARNING! .git is the directory, not a regular file! only consume it in your rules if you know how exactly bazel works and understand implications!
 exports_files([
