@@ -23,7 +23,11 @@ use ic_nns_governance::{
     governance::{Environment, Governance, HeapGrowthPotential, TimeWarp as GovTimeWarp},
     neuron_data_validation::NeuronDataValidationSummary,
     pb::v1::{self as gov_pb, Governance as InternalGovernanceProto},
-    storage::{grow_upgrades_memory_to, validate_stable_storage, with_upgrades_memory},
+    storage::{
+        grow_upgrades_memory_to, validate_stable_storage, with_upgrades_memory,
+        allocate_ic_wasm_instrument_memory_once,
+        where_ic_wasm_instrument_memory as where_ic_wasm_instrument_memory_native,
+    },
 };
 #[cfg(feature = "test")]
 use ic_nns_governance_api::test_api::TimeWarp;
@@ -391,6 +395,8 @@ fn canister_pre_upgrade() {
 fn canister_post_upgrade() {
     println!("{}Executing post upgrade", LOG_PREFIX);
 
+    allocate_ic_wasm_instrument_memory_once();
+
     let restored_state = with_upgrades_memory(|memory| {
         let result: Result<InternalGovernanceProto, _> = load_protobuf(memory);
         result
@@ -419,6 +425,11 @@ fn canister_post_upgrade() {
     ));
 
     validate_stable_storage();
+}
+
+#[query]
+fn where_ic_wasm_instrument_memory() -> (u64, u64) {
+    where_ic_wasm_instrument_memory_native()
 }
 
 #[cfg(feature = "test")]
@@ -628,7 +639,7 @@ fn list_proposals(req: ListProposalInfo) -> ListProposalInfoResponse {
     governance().list_proposals(&caller(), &(req.into())).into()
 }
 
-#[query]
+#[update]
 fn list_neurons(req: ListNeurons) -> ListNeuronsResponse {
     debug_log("list_neurons");
     governance().list_neurons(&(req.into()), caller()).into()
