@@ -1,7 +1,10 @@
-"""Foo bar"""
+"""Build helpers for using the pocket-ic"""
 
 load("@bazel_skylib//lib:paths.bzl", "paths")
 
+# This defines a transition used in the pocket-ic declaration.
+# This allows tests to depend on an arbitrary version of pocket-ic
+# and for dependents to override that version.
 def _pocket_ic_mainnet_transition_impl(_settings, _attr):
     return {
         "//:pocket-ic-variant": "mainnet",
@@ -15,6 +18,30 @@ pocket_ic_mainnet_transition = transition(
     ],
 )
 
+# Rule to override another (test) rule. The resulting rule
+# will use the mainnet pocket-ic varaint.
+pocket_ic_mainnet_test = rule(
+    _pocket_ic_mainnet_test_impl,
+    attrs = {
+        "_allowlist_function_transition": attr.label(
+            default = "@bazel_tools//tools/allowlists/function_transition_allowlist",
+        ),
+        "data": attr.label_list(allow_files = True),
+        "test": attr.label(
+            aspects = [_test_aspect],
+            cfg = "target",
+            executable = True,
+        ),
+    },
+    cfg = pocket_ic_mainnet_transition,
+    executable = True,
+    test = True,
+)
+
+# Provider that allows wrapping/transitioning a test executable. This
+# ensure all the test data & env is forwarded.
+# Adapted from github.com/aherrman/bazel-transitions-demo:
+# https://github.com/aherrmann/bazel-transitions-demo/blob/f22cf40a62131eace14829f262e8d7c00b0a9a19/flag/defs.bzl#L124
 TestAspectInfo = provider("some descr", fields = ["args", "env"])
 
 def _test_aspect_impl(_target, ctx):
@@ -65,21 +92,3 @@ set -euo pipefail
         files = depset(direct = [executable]),
         runfiles = runfiles,
     )]
-
-pocket_ic_mainnet_test = rule(
-    _pocket_ic_mainnet_test_impl,
-    attrs = {
-        "_allowlist_function_transition": attr.label(
-            default = "@bazel_tools//tools/allowlists/function_transition_allowlist",
-        ),
-        "data": attr.label_list(allow_files = True),
-        "test": attr.label(
-            aspects = [_test_aspect],
-            cfg = "target",
-            executable = True,
-        ),
-    },
-    cfg = pocket_ic_mainnet_transition,
-    executable = True,
-    test = True,
-)
