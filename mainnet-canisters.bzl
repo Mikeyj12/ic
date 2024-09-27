@@ -57,69 +57,69 @@ def mainnet_core_nns_canisters():
     #    url = canister_url(git_commit_id, "governance-canister.wasm.gz"),
     #)
 
-    git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["ledger"]
-    http_file(
-        name = "mainnet_icp_ledger_canister",
-        downloaded_file_path = "ledger-canister_notify-method.wasm.gz",
-        sha256 = sha256,
-        url = canister_url(git_commit_id, "ledger-canister_notify-method.wasm.gz"),
-    )
+    #git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["ledger"]
+    #http_file(
+    #    name = "mainnet_icp_ledger_canister",
+    #    downloaded_file_path = "ledger-canister_notify-method.wasm.gz",
+    #    sha256 = sha256,
+    #    url = canister_url(git_commit_id, "ledger-canister_notify-method.wasm.gz"),
+    #)
 
-    git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["archive"]
-    http_file(
-        name = "mainnet_icp_ledger-archive-node-canister",
-        downloaded_file_path = "ledger-archive-node-canister.wasm.gz",
-        sha256 = sha256,
-        url = canister_url(git_commit_id, "ledger-archive-node-canister.wasm.gz"),
-    )
+    #git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["archive"]
+    #http_file(
+    #    name = "mainnet_icp_ledger-archive-node-canister",
+    #    downloaded_file_path = "ledger-archive-node-canister.wasm.gz",
+    #    sha256 = sha256,
+    #    url = canister_url(git_commit_id, "ledger-archive-node-canister.wasm.gz"),
+    #)
 
-    git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["index"]
-    http_file(
-        name = "mainnet_icp_index_canister",
-        downloaded_file_path = "ic-icp-index-canister.wasm.gz",
-        sha256 = sha256,
-        url = canister_url(git_commit_id, "ic-icp-index-canister.wasm.gz"),
-    )
+    #git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["index"]
+    #http_file(
+    #    name = "mainnet_icp_index_canister",
+    #    downloaded_file_path = "ic-icp-index-canister.wasm.gz",
+    #    sha256 = sha256,
+    #    url = canister_url(git_commit_id, "ic-icp-index-canister.wasm.gz"),
+    #)
 
-    git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["root"]
-    http_file(
-        name = "mainnet_nns_root-canister",
-        downloaded_file_path = "root-canister.wasm.gz",
-        sha256 = sha256,
-        url = canister_url(git_commit_id, "root-canister.wasm.gz"),
-    )
+    #git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["root"]
+    #http_file(
+    #    name = "mainnet_nns_root-canister",
+    #    downloaded_file_path = "root-canister.wasm.gz",
+    #    sha256 = sha256,
+    #    url = canister_url(git_commit_id, "root-canister.wasm.gz"),
+    #)
 
-    git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["lifeline"]
-    http_file(
-        name = "mainnet_nns_lifeline_canister",
-        downloaded_file_path = "lifeline-canister.wasm.gz",
-        sha256 = sha256,
-        url = canister_url(git_commit_id, "lifeline_canister.wasm.gz"),
-    )
+    #git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["lifeline"]
+    #http_file(
+    #    name = "mainnet_nns_lifeline_canister",
+    #    downloaded_file_path = "lifeline-canister.wasm.gz",
+    #    sha256 = sha256,
+    #    url = canister_url(git_commit_id, "lifeline_canister.wasm.gz"),
+    #)
 
-    git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["genesis-token"]
-    http_file(
-        name = "mainnet_nns_genesis-token-canister",
-        downloaded_file_path = "genesis-token-canister.wasm.gz",
-        sha256 = sha256,
-        url = canister_url(git_commit_id, "genesis-token-canister.wasm.gz"),
-    )
+    #git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["genesis-token"]
+    #http_file(
+    #    name = "mainnet_nns_genesis-token-canister",
+    #    downloaded_file_path = "genesis-token-canister.wasm.gz",
+    #    sha256 = sha256,
+    #    url = canister_url(git_commit_id, "genesis-token-canister.wasm.gz"),
+    #)
 
-    git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["cycles-minting"]
-    http_file(
-        name = "mainnet_nns_cycles-minting-canister",
-        downloaded_file_path = "cycles-minting-canister.wasm.gz",
-        sha256 = sha256,
-        url = canister_url(git_commit_id, "cycles-minting-canister.wasm.gz"),
-    )
+    #git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["cycles-minting"]
+    #http_file(
+    #    name = "mainnet_nns_cycles-minting-canister",
+    #    downloaded_file_path = "cycles-minting-canister.wasm.gz",
+    #    sha256 = sha256,
+    #    url = canister_url(git_commit_id, "cycles-minting-canister.wasm.gz"),
+    #)
 
-    git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["sns-wasm"]
-    http_file(
-        name = "mainnet_nns_sns-wasm-canister",
-        downloaded_file_path = "sns-wasm-canister.wasm.gz",
-        sha256 = sha256,
-        url = canister_url(git_commit_id, "sns-wasm-canister.wasm.gz"),
-    )
+    #git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["sns-wasm"]
+    #http_file(
+    #    name = "mainnet_nns_sns-wasm-canister",
+    #    downloaded_file_path = "sns-wasm-canister.wasm.gz",
+    #    sha256 = sha256,
+    #    url = canister_url(git_commit_id, "sns-wasm-canister.wasm.gz"),
+    #)
 
 def mainnet_ck_canisters():
     """
