@@ -123,7 +123,7 @@ def external_crates_repository(name, cargo_lockfile, lockfile, sanitizers_enable
         annotations = CRATE_ANNOTATIONS,
         packages = {
             "walrus": crate.spec(
-                version = "^0.21.1",
+                version = "^0.22",
             ),
             "actix-rt": crate.spec(
                 version = "^2.10.0",
@@ -651,7 +651,9 @@ def external_crates_repository(name, cargo_lockfile, lockfile, sanitizers_enable
                 default_features = False,
             ),
             "ic-wasm": crate.spec(
-                version = "^0.8.4",
+                git = "https://github.com/dfinity/ic-wasm", # DO NOT MERGE
+                rev = "e6b26402f4aa053903ffe4cb3ba2dac5f9dca89b", # DO NOT MERGE
+                # DO NOT MERGE version = "^0.8.4",
                 features = [
                     "exe",
                 ],
