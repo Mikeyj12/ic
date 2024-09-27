@@ -22,19 +22,19 @@ def canister_deps():
 
         git_commit_id = canisterinfo.get("rev", None)
         if git_commit_id == None:
-            fail("no rev for canister: "+canister_key)
+            fail("no rev for canister: " + canister_key)
 
         sha256 = canisterinfo.get("sha256", None)
         if sha256 == None:
-            fail("no sha256 for canister: "+canister_key)
+            fail("no sha256 for canister: " + canister_key)
 
         filename = filenames.pop(canister_key, None)
         if filename == None:
-            fail("no filename for canister: "+canister_key)
+            fail("no filename for canister: " + canister_key)
 
         reponame = reponames.pop(canister_key, None)
         if reponame == None:
-            fail("no reponame for canister: "+canister_key)
+            fail("no reponame for canister: " + canister_key)
 
         content += '''
 

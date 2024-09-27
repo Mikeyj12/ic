@@ -81,9 +81,8 @@ load("@rules_oci//oci:repositories.bzl", "oci_register_toolchains")
 oci_register_toolchains(name = "oci")
 
 load("@rules_oci//oci:pull.bzl", "oci_pull")
-load("//third_party/lmdb:repository.bzl", "lmdb_repository")
-
 load("//bazel:mainnet-canisters.bzl", "canisters")
+load("//third_party/lmdb:repository.bzl", "lmdb_repository")
 
 canisters(
     name = "canisters",
@@ -135,6 +134,7 @@ canisters(
 )
 
 load("@canisters//:defs.bzl", "canister_deps")
+
 canister_deps()
 
 # file server used in tests
