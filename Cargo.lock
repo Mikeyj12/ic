@@ -19513,6 +19513,7 @@ dependencies = [
  "ic-nns-constants",
  "rgb",
  "serde",
+ "serde_json",
  "tempfile",
  "tokio",
 ]
