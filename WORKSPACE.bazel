@@ -96,7 +96,7 @@ canisters(
         "archive": "ledger-archive-node-canister.wasm.gz",
         "index": "ic-icp-index-canister.wasm.gz",
         "root": "root-canister.wasm.gz",
-        "lifeline": "lifeline-canister.wasm.gz",
+        "lifeline": "lifeline_canister.wasm.gz",
         "genesis-token": "genesis-token-canister.wasm.gz",
         "cycles-minting": "cycles-minting-canister.wasm.gz",
         "sns-wasm": "sns-wasm-canister.wasm.gz",
