@@ -41,21 +41,21 @@ def mainnet_core_nns_canisters():
     This includes: Lifeline, Root, Registry, Governance, ICP Ledger (Index, Archive), CMC, GTC, SNS-W.
     """
 
-    git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["registry"]
-    http_file(
-        name = "mainnet_nns_registry_canister",
-        downloaded_file_path = "registry-canister.wasm.gz",
-        sha256 = sha256,
-        url = canister_url(git_commit_id, "registry-canister.wasm.gz"),
-    )
+    #git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["registry"]
+    #http_file(
+    #    name = "mainnet_nns_registry_canister",
+    #    downloaded_file_path = "registry-canister.wasm.gz",
+    #    sha256 = sha256,
+    #    url = canister_url(git_commit_id, "registry-canister.wasm.gz"),
+    #)
 
-    git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["governance"]
-    http_file(
-        name = "mainnet_nns_governance_canister",
-        downloaded_file_path = "governance-canister.wasm.gz",
-        sha256 = sha256,
-        url = canister_url(git_commit_id, "governance-canister.wasm.gz"),
-    )
+    #git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["governance"]
+    #http_file(
+    #    name = "mainnet_nns_governance_canister",
+    #    downloaded_file_path = "governance-canister.wasm.gz",
+    #    sha256 = sha256,
+    #    url = canister_url(git_commit_id, "governance-canister.wasm.gz"),
+    #)
 
     git_commit_id, sha256 = CANISTER_NAME_TO_WASM_METADATA["ledger"]
     http_file(
