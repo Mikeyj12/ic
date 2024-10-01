@@ -149,6 +149,11 @@ impl CatchUpPackageMaker {
         start_block: Block,
     ) -> Option<CatchUpPackageShare> {
         let height = start_block.height();
+        info!(
+            self.log,
+            "consider_block at height {}",
+            height
+        );
 
         // Skip if this node is not in the committee to make CUP shares
         let my_node_id = self.replica_config.node_id;
@@ -182,7 +187,7 @@ impl CatchUpPackageMaker {
         match self.state_manager.get_state_hash_at(height) {
             Err(StateHashError::Transient(StateNotCommittedYet(_))) => {
                 // TODO: Setup a delay before retry
-                debug!(
+                info!(
                     self.log,
                     "Cannot make CUP at height {} because state is not committed yet. Will retry",
                     height
@@ -190,7 +195,7 @@ impl CatchUpPackageMaker {
                 None
             }
             Err(StateHashError::Transient(HashNotComputedYet(_))) => {
-                debug!(self.log, "Cannot make CUP at height {} because state hash is not computed yet. Will retry", height);
+                info!(self.log, "Cannot make CUP at height {} because state hash is not computed yet. Will retry", height);
                 None
             }
             Err(StateHashError::Permanent(StateRemoved(_))) => {
@@ -208,6 +213,7 @@ impl CatchUpPackageMaker {
                 );
             }
             Ok(state_hash) => {
+                info!(self.log, "consider_block: get_state_hash_at height {}", height);
                 let summary = start_block.payload.as_ref().as_summary();
                 let registry_version = if let Some(idkg) = summary.idkg.as_ref() {
                     // Should succeed as we already got the hash above
@@ -236,6 +242,10 @@ impl CatchUpPackageMaker {
                         .ok()?;
                     get_oldest_idkg_state_registry_version(idkg, state.get_ref())
                 } else {
+                    info!(
+                        self.log,
+                        "consider_block: no idkg payload at height {}", height
+                    );
                     None
                 };
                 let content = CatchUpContent::new(

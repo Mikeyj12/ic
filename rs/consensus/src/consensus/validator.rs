@@ -1639,6 +1639,11 @@ impl Validator {
         share_content: &CatchUpShareContent,
     ) -> Result<Block, ValidatorError> {
         let height = share_content.height();
+        info!(
+            self.log,
+            "validate_catch_up_share_content at height {}",
+            height
+        );
         let block = pool_reader
             .get_finalized_block(height)
             .ok_or(ValidationFailure::FinalizedBlockNotFound(height))?;
@@ -1668,6 +1673,7 @@ impl Validator {
             .state_manager
             .get_state_hash_at(height)
             .map_err(ValidationFailure::StateHashError)?;
+        info!(self.log, "validate_catch_up_share_content: get_state_hash_at height {}", height);
         if hash != share_content.state_hash {
             warn!(self.log, "State hash from received CatchUpContent does not match local state hash: {:?} {:?}", share_content, hash);
             return Err(InvalidArtifactReason::MismatchedStateHashInCatchUpPackageShare.into());
@@ -1691,6 +1697,10 @@ impl Validator {
             })?;
             get_oldest_idkg_state_registry_version(idkg, state.get_ref())
         } else {
+            info!(
+                self.log,
+                "validate_catch_up_share_content: no idkg payload at height {}", height
+            );
             None
         };
         if registry_version != share_content.oldest_registry_version_in_use_by_replicated_state {
