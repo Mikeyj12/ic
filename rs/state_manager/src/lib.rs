@@ -31,11 +31,7 @@ use ic_interfaces::certification::Verifier;
 use ic_interfaces_certified_stream_store::{
     CertifiedStreamStore, DecodeStreamError, EncodeStreamError,
 };
-use ic_interfaces_state_manager::{
-    CertificationScope, CertifiedStateSnapshot, Labeled, PermanentStateHashError::*,
-    StateHashError, StateManager, StateManagerError, StateManagerResult, StateReader,
-    TransientStateHashError::*,
-};
+use ic_interfaces_state_manager::{CERT_ANY, CertificationScope, CertifiedStateSnapshot, Labeled, PermanentStateHashError::*, StateHashError, StateManager, StateManagerError, StateManagerResult, StateReader, TransientStateHashError::*};
 use ic_logger::{debug, error, fatal, info, warn, ReplicaLogger};
 use ic_metrics::{buckets::decimal_buckets, MetricsRegistry};
 use ic_protobuf::proxy::{ProtoProxy, ProxyDecodeError};
@@ -3652,7 +3648,7 @@ impl StateReader for StateManagerImpl {
         }) {
             Some(state) => Ok(state),
             None => {
-                let inmemory_state_heights = self.list_state_heights();
+                let inmemory_state_heights = self.list_state_heights(CERT_ANY);
                 let checkpoint_heights = self.checkpoint_heights();
                 info!(
                     self.log,

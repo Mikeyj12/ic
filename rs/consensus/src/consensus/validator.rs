@@ -1687,7 +1687,7 @@ impl Validator {
                     height,
                     err
                 );
-                ValidationFailure::StateManagerError
+                ValidationFailure::StateManagerError(err)
             })?;
             get_oldest_idkg_state_registry_version(idkg, state.get_ref())
         } else {
