@@ -2360,7 +2360,7 @@ impl StateManagerImpl {
 
         #[cfg(debug_assertions)]
         {
-            use ic_interfaces_state_manager::CERT_ANY;
+            use ic_interfaces_state_manager::{CERT_ANY, CERT_CERTIFIED};
             let unfiltered_checkpoint_heights = self
                 .state_layout
                 .unfiltered_checkpoint_heights()
