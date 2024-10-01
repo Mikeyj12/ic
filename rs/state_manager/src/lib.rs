@@ -3651,25 +3651,55 @@ impl StateReader for StateManagerImpl {
             (snapshot.height == height).then(|| Labeled::new(height, snapshot.state.clone()))
         }) {
             Some(state) => Ok(state),
-            None => match load_checkpoint(
-                &self.state_layout,
-                height,
-                &self.metrics,
-                self.own_subnet_type,
-                Arc::clone(&self.get_fd_factory()),
-            ) {
-                Ok((state, _)) => Ok(Labeled::new(height, Arc::new(state))),
-                Err(CheckpointError::NotFound(_)) => Err(StateManagerError::StateRemoved(height)),
-                Err(err) => {
-                    self.metrics
-                        .state_manager_error_count
-                        .with_label_values(&["recover_checkpoint"])
-                        .inc();
-                    error!(self.log, "Failed to recover state @{}: {}", height, err);
+            None => {
+                let inmemory_state_heights = self.list_state_heights();
+                let checkpoint_heights = self.checkpoint_heights();
+                info!(
+                    self.log,
+                    "State @{} not found in memory. Trying to load_checkpoint. Current inmemory_state_heights :{:?}, checkpoint_heights :{:?}",
+                    height,
+                    inmemory_state_heights,
+                    checkpoint_heights,
+                );
+                match load_checkpoint(
+                    &self.state_layout,
+                    height,
+                    &self.metrics,
+                    self.own_subnet_type,
+                    Arc::clone(&self.get_fd_factory()),
+                ) {
+                    Ok((state, _)) => {
+                        info!(
+                            self.log,
+                            "get_state_at successfully loaded checkpoint @{} from disk", height
+                        );
+                        Ok(Labeled::new(height, Arc::new(state)))
+                    }
+                    Err(CheckpointError::NotFound(_)) => {
+                        info!(
+                            self.log,
+                            "get_state_at CheckpointError NotFound @{}", height
+                        );
+                        Err(StateManagerError::StateRemoved(height))
+                    }
 
-                    Err(StateManagerError::StateRemoved(height))
+                    Err(err) => {
+                        self.metrics
+                            .state_manager_error_count
+                            .with_label_values(&["recover_checkpoint"])
+                            .inc();
+                        error!(self.log, "Failed to recover state @{}: {}", height, err);
+
+                        {
+                            info!(
+                                self.log,
+                                "get_state_at failed to recover checkpoint @{}", height
+                            );
+                            Err(StateManagerError::StateRemoved(height))
+                        }
+                    }
                 }
-            },
+            }
         }
     }
 

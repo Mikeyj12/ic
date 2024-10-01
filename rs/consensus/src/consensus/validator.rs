@@ -30,7 +30,7 @@ use ic_interfaces::{
 };
 use ic_interfaces_registry::RegistryClient;
 use ic_interfaces_state_manager::{StateHashError, StateManager, StateManagerError};
-use ic_logger::{trace, warn, ReplicaLogger};
+use ic_logger::{info, trace, warn, ReplicaLogger};
 use ic_replicated_state::ReplicatedState;
 use ic_types::{
     batch::ValidationContext,
@@ -1676,10 +1676,19 @@ impl Validator {
         let summary = block.payload.as_ref().as_summary();
         let registry_version = if let Some(idkg) = summary.idkg.as_ref() {
             // Should succeed as we already got the hash above
-            let state = self
-                .state_manager
-                .get_state_at(height)
-                .map_err(ValidationFailure::StateManagerError)?;
+            info!(
+                self.log,
+                "validate_catch_up_share_content calls get_state_at height {}", height
+            );
+            let state = self.state_manager.get_state_at(height).map_err(|err| {
+                info!(
+                    self.log,
+                    "validate_catch_up_share_content get_state_at failed at height {}, err: {:?}",
+                    height,
+                    err
+                );
+                ValidationFailure::StateManagerError
+            })?;
             get_oldest_idkg_state_registry_version(idkg, state.get_ref())
         } else {
             None

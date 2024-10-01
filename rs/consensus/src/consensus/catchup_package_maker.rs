@@ -21,7 +21,7 @@ use ic_interfaces::messaging::MessageRouting;
 use ic_interfaces_state_manager::{
     PermanentStateHashError::*, StateHashError, StateManager, TransientStateHashError::*,
 };
-use ic_logger::{debug, error, trace, ReplicaLogger};
+use ic_logger::{debug, error, info, trace, ReplicaLogger};
 use ic_replicated_state::ReplicatedState;
 use ic_types::{
     consensus::{
@@ -211,10 +211,20 @@ impl CatchUpPackageMaker {
                 let summary = start_block.payload.as_ref().as_summary();
                 let registry_version = if let Some(idkg) = summary.idkg.as_ref() {
                     // Should succeed as we already got the hash above
+                    info!(
+                        self.log,
+                        "consider_block calls get_state_at height {}", height
+                    );
                     let state = self
                         .state_manager
                         .get_state_at(height)
                         .map_err(|err| {
+                            info!(
+                                self.log,
+                                "consider_block get_state_at failed at height {}, err: {:?}",
+                                height,
+                                err
+                            );
                             error!(
                                 self.log,
                                 "Cannot make IDKG CUP at height {}: `get_state_hash_at` \
