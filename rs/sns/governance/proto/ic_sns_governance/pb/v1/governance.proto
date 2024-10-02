@@ -1449,6 +1449,13 @@ message Governance {
 
   reserved "migrated_root_wasm_memory_limit";
   reserved 27;
+
+  message CachedUpgradeSteps {
+    repeated Governance.Version upgrade_steps = 1;
+    optional uint64 requested_timestamp_seconds = 2;
+    optional uint64 response_timestamp_seconds = 3;
+  }
+  CachedUpgradeSteps cached_upgrade_steps = 29;
 }
 
 // Request message for 'get_metadata'.

@@ -1644,6 +1644,8 @@ pub struct Governance {
     pub is_finalizing_disburse_maturity: ::core::option::Option<bool>,
     #[prost(message, optional, tag = "26")]
     pub maturity_modulation: ::core::option::Option<governance::MaturityModulation>,
+    #[prost(message, optional, tag = "29")]
+    pub cached_upgrade_steps: ::core::option::Option<governance::CachedUpgradeSteps>,
 }
 /// Nested message and enum types in `Governance`.
 pub mod governance {
@@ -1903,6 +1905,22 @@ pub mod governance {
         /// When current_basis_points was last updated (seconds since UNIX epoch).
         #[prost(uint64, optional, tag = "2")]
         pub updated_at_timestamp_seconds: ::core::option::Option<u64>,
+    }
+    #[derive(
+        candid::CandidType,
+        candid::Deserialize,
+        comparable::Comparable,
+        Clone,
+        PartialEq,
+        ::prost::Message,
+    )]
+    pub struct CachedUpgradeSteps {
+        #[prost(message, repeated, tag = "1")]
+        pub upgrade_steps: ::prost::alloc::vec::Vec<Version>,
+        #[prost(uint64, optional, tag = "2")]
+        pub requested_timestamp_seconds: ::core::option::Option<u64>,
+        #[prost(uint64, optional, tag = "3")]
+        pub response_timestamp_seconds: ::core::option::Option<u64>,
     }
     #[derive(
         candid::CandidType,

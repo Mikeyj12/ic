@@ -20,7 +20,8 @@ use crate::{
             governance::{
                 self,
                 neuron_in_flight_command::{self, Command as InFlightCommand},
-                MaturityModulation, NeuronInFlightCommand, SnsMetadata, UpgradeInProgress, Version,
+                CachedUpgradeSteps, MaturityModulation, NeuronInFlightCommand, SnsMetadata,
+                UpgradeInProgress, Version,
             },
             governance_error::ErrorType,
             manage_neuron::{
@@ -4632,6 +4633,82 @@ impl Governance {
         self.maybe_move_staked_maturity();
 
         self.maybe_gc();
+
+        if self.should_refresh_cached_upgrade_steps().await {
+            // TODO: first, update deployed_version if an upgrade triggered by target_version is in progress
+
+            self.refresh_cached_upgrade_steps().await;
+        }
+    }
+
+    pub async fn should_refresh_cached_upgrade_steps(&mut self) -> bool {
+        // Putting this in a block to emphasize that nothing in here is async
+        {
+            // only in this block
+            let now = self.env.now();
+
+            if let Some(ref cached_upgrade_steps) = self.proto.cached_upgrade_steps {
+                const UPDATE_INTERVAL: u64 = 5 * 60; // 5 minutes // TODO: move somewhere else
+                let last_request = cached_upgrade_steps
+                    .requested_timestamp_seconds
+                    .unwrap_or(0);
+                if now - last_request < UPDATE_INTERVAL {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /// Refreshes the cached_upgrade_steps field
+    pub async fn refresh_cached_upgrade_steps(&mut self) {
+        // Putting this in a block to emphasize that nothing in here is async
+        let (current_version, sns_governance_canister_id) = {
+            let now = self.env.now();
+            let Some(current_version) = self.proto.deployed_version.clone() else {
+                // TODO: add logs
+                return;
+            };
+            let sns_governance_canister_id = self.env.canister_id().get();
+
+            // Update the timestamp of the time of the last refresh
+            // This ensures that maybe_refresh_cached_upgrade_steps will
+            // not make an async call to get_upgrade_steps unless it has been
+            // at least 5 minutes since the last time we tried
+            self.proto.cached_upgrade_steps = {
+                let mut cached_upgrade_steps =
+                    self.proto.cached_upgrade_steps.clone().unwrap_or_default();
+                cached_upgrade_steps.requested_timestamp_seconds = Some(now);
+                Some(cached_upgrade_steps)
+            };
+
+            (current_version, sns_governance_canister_id)
+        };
+
+        let new_upgrade_steps = crate::sns_upgrade::get_upgrade_steps(
+            &*self.env,
+            current_version,
+            sns_governance_canister_id,
+        )
+        .await;
+
+        {
+            let now = self.env.now();
+
+            match new_upgrade_steps {
+                Ok(upgrade_steps) => {
+                    self.proto.cached_upgrade_steps = Some(CachedUpgradeSteps {
+                        upgrade_steps,
+                        response_timestamp_seconds: Some(now),
+                        ..self.proto.cached_upgrade_steps.clone().unwrap_or_default()
+                    });
+                }
+                Err(err) => {
+                    log!(ERROR, "Failed to get upgrade path: {}", err);
+                }
+            }
+        }
     }
 
     fn should_update_maturity_modulation(&self) -> bool {
