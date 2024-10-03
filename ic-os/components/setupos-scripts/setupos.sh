@@ -41,6 +41,7 @@ main() {
     /opt/ic/bin/check-hardware.sh
     /opt/ic/bin/check-network.sh
     if kernel_cmdline_bool_default_false ic.setupos.stop_before_installation; then
+        echo "* Installation skipped by request via kernel command line"
         exit
     fi
     /opt/ic/bin/setup-disk.sh
