@@ -32,7 +32,8 @@ function copy_config_files() {
         cp ${FIREWALL_FILE} /media/firewall.json
         log_and_halt_installation_on_error "${?}" "Unable to copy '${FIREWALL_FILE}' to hostOS config partition."
     else
-        # This file is optional.  It will not be used if absent.
+        # This file is optional.  It will not be used if absent.  If present, it
+        # has already been checked for consistency before this step.
         if [ -f "${CONFIG_DIR}/firewall.json" ]; then
             echo "* Copying 'firewall.json' to hostOS config partition..."
             cp ${CONFIG_DIR}/firewall.json /media/firewall.json
