@@ -26,7 +26,7 @@ function copy_config_files() {
         log_and_halt_installation_on_error "1" "Configuration file 'config.ini' does not exist."
     fi
 
-    if [ -f ${FIREWALL_FILE} ]; then
+    if [ -v FIREWALL_FILE ]; then
         # This file has been checked for correctness before in check_firewall_rules.
         echo "* Copying '${FIREWALL_FILE}' as firewall.json to hostOS config partition..."
         cp ${FIREWALL_FILE} /media/firewall.json

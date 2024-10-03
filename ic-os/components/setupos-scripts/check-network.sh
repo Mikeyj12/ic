@@ -96,7 +96,7 @@ function get_network_settings() {
 
 function check_firewall_rules() {
     local ret=0
-    if [ -n "${FIREWALL_FILE}" ]; then
+    if [ -v FIREWALL_FILE ]; then
         echo "* Checking firewall rules in ${FIREWALL_FILE}..."
         test -f "${FIREWALL_FILE}" || {
             echo >&2 "Failed to read explicitly-specified firewall file ${FIREWALL_FILE}"
