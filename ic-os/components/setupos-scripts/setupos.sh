@@ -48,6 +48,10 @@ main() {
     /opt/ic/bin/install-hostos.sh
     /opt/ic/bin/install-guestos.sh
     /opt/ic/bin/setup-hostos-config.sh
+    if kernel_cmdline_bool_default_true ic.setupos.reboot_after_installation; then
+        echo "* Reboot skipped by request via kernel command line"
+        exit
+    fi
     reboot_setupos
     log_end "$(basename $0)"
 }
