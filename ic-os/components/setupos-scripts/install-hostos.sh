@@ -10,15 +10,21 @@ function install_hostos() {
     echo "* Installing HostOS disk-image..."
 
     target_drive=$(find_first_drive)
-    echo "* HostOS will be deployed to ${target_drive}"
+    echo "* HostOS will be deployed to /dev/${target_drive}"
 
     TMPDIR=$(mktemp -d)
+    # Release RAM.
+    rm -f disk.img
+    # Extract the disk image to RAM.
+    echo "* Temporarily extracting the HostOS image to RAM; please stand by for a few seconds"
     tar xafS /data/host-os.img.tar.zst -C "${TMPDIR}" disk.img
-
-    size=$(wc -c <"${TMPDIR}/disk.img")
-    size="${size:=0}"
-
-    pv -f -s "$size" "${TMPDIR}/disk.img" | dd of="/dev/${target_drive}" bs=10M conv=sparse
+    # Duplicate the image to the disk.
+    # Progress is handled by status=progress.
+    # Makes a huge difference when running the setup under QEMU with no KVM.
+    # dd will detect nulls in chunks of 4M and sparsify the writes.
+    # In *non-KVM-accelerated* VM, this goes 500 MB/s, three times as fast as before.
+    echo "* Writing the HostOS image to /dev/${target_drive}"
+    dd if="${TMPDIR}/disk.img" of="/dev/${target_drive}" bs=4M conv=sparse status=progress
     log_and_halt_installation_on_error "${?}" "Unable to install HostOS disk-image on drive: /dev/${target_drive}"
 
     rm -rf "${TMPDIR}"
