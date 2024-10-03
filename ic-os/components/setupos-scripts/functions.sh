@@ -72,10 +72,16 @@ function get_large_drives() {
 # If set to 0, return false (1).
 # if absent or any other value, return true (1).
 function kernel_cmdline_bool_default_true() {
-    if grep -qF " $1=1" /proc/cmdline; then
+    # Add spaces at the beginning and the end for greppability.
+    local cmdline=" $(cat /proc/cmdline) "
+    if echo "$cmdline" | grep -qF " $1=1 "; then
         return 0
     fi
-    if grep -qF " $1=0" /proc/cmdline; then
+    # Covers the case where the option is present without =1 as value.
+    if echo "$cmdline" | grep -qF " $1 "; then
+        return 0
+    fi
+    if echo "$cmdline" | grep -qF " $1=0 "; then
         return 1
     fi
     return 0
@@ -86,10 +92,16 @@ function kernel_cmdline_bool_default_true() {
 # If set to 0, return false (1).
 # if absent or any other value, return false (1).
 function kernel_cmdline_bool_default_false() {
-    if grep -qF " $1=1" /proc/cmdline; then
+    # Add spaces at the beginning and the end for greppability.
+    local cmdline=" $(cat /proc/cmdline) "
+    if echo "$cmdline" | grep -qF " $1=1"; then
         return 0
     fi
-    if grep -qF " $1=0" /proc/cmdline; then
+    # Covers the case where the option is present without =1 as value.
+    if echo "$cmdline" | grep -qF " $1 "; then
+        return 0
+    fi
+    if echo "$cmdline" | grep -qF " $1=0"; then
         return 1
     fi
     return 1
