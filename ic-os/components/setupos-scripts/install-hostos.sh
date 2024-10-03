@@ -13,11 +13,12 @@ function install_hostos() {
     echo "* HostOS will be deployed to /dev/${target_drive}"
 
     TMPDIR=$(mktemp -d)
-    # Release RAM.
+    # Release RAM.  Cannot be run concurrently with install-guestos.sh.
     rm -f disk.img
     # Extract the disk image to RAM.
-    echo "* Temporarily extracting the HostOS image to RAM; please stand by for a few seconds"
+    echo "* Temporarily extracting the HostOS image to memory; please stand by for a few seconds"
     tar xafS /data/host-os.img.tar.zst -C "${TMPDIR}" disk.img
+    log_and_halt_installation_on_error "${?}" "Unable to extract HostOS disk-image."
     # Duplicate the image to the disk.
     # Progress is handled by status=progress.
     # Makes a huge difference when running the setup under QEMU with no KVM.
