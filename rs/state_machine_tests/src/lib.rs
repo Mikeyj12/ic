@@ -901,7 +901,6 @@ pub struct StateMachineBuilder {
     nns_subnet_id: Option<SubnetId>,
     subnet_id: Option<SubnetId>,
     routing_table: RoutingTable,
-    enable_canister_snapshots: bool,
     idkg_keys_signing_enabled_status: BTreeMap<MasterPublicKeyId, bool>,
     ecdsa_signature_fee: Option<Cycles>,
     schnorr_signature_fee: Option<Cycles>,
@@ -928,7 +927,6 @@ impl StateMachineBuilder {
             config: None,
             checkpoint_interval_length: None,
             subnet_type: SubnetType::System,
-            enable_canister_snapshots: false,
             subnet_size: SMALL_APP_SUBNET_MAX_SIZE,
             nns_subnet_id: None,
             subnet_id: None,
@@ -1043,13 +1041,6 @@ impl StateMachineBuilder {
         }
     }
 
-    pub fn with_canister_snapshots(self, enable_canister_snapshots: bool) -> Self {
-        Self {
-            enable_canister_snapshots,
-            ..self
-        }
-    }
-
     pub fn with_master_ecdsa_public_key(self) -> Self {
         self.with_idkg_key(MasterPublicKeyId::Ecdsa(EcdsaKeyId {
             curve: EcdsaCurve::Secp256k1,
@@ -1153,7 +1144,6 @@ impl StateMachineBuilder {
             self.subnet_type,
             self.subnet_size,
             self.subnet_id,
-            self.enable_canister_snapshots,
             self.idkg_keys_signing_enabled_status,
             self.ecdsa_signature_fee,
             self.schnorr_signature_fee,
@@ -1475,7 +1465,6 @@ impl StateMachine {
         subnet_type: SubnetType,
         subnet_size: usize,
         subnet_id: Option<SubnetId>,
-        enable_canister_snapshots: bool,
         idkg_keys_signing_enabled_status: BTreeMap<MasterPublicKeyId, bool>,
         ecdsa_signature_fee: Option<Cycles>,
         schnorr_signature_fee: Option<Cycles>,
@@ -1543,10 +1532,6 @@ impl StateMachine {
         if !dts {
             hypervisor_config.canister_sandboxing_flag = FlagStatus::Disabled;
             hypervisor_config.deterministic_time_slicing = FlagStatus::Disabled;
-        }
-
-        if enable_canister_snapshots {
-            hypervisor_config.canister_snapshots = FlagStatus::Enabled;
         }
 
         // We are not interested in ingress signature validation.
