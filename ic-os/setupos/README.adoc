@@ -20,6 +20,42 @@ For more information on the onboarding and installation process, as well as the 
 
 To build a SetupOS image, refer to the link:../README.adoc[IC-OS README]
 
+=== Running SetupOS locally
+
+This requires QEMU with qemu-system and qemu-kvm installed on the machine.
+
+Bazel can be used to boot a local VM with a GuestOS like this:
+
+    bazel run //ic-os/setupos/envs/dev:launch-local-vm
+
+In a VM or container without KVM support, use:
+
+    bazel run //ic-os/setupos/envs/dev:launch-local-vm-no-kvm
+
+==== Testing a running SetupOS interactively
+
+As you know, running SetupOS will attempt setup as soon as the system boots, which will fail.
+You can skip hardware and network checks, avoiding the failure, through the following kernel command line options:
+
+* `ic.setupos.check_hardware=0`
+* `ic.setupos.check_network=0`
+
+These options must be added to the file `context/extra_boot_args` in this folder prior to launching.
+Please do not check in such changes to this file.
+
+Another issue launching SetupOS this way is that, after the checks, the installation starts automatically.
+This destroys the disk that SetupOS booted from.  To skip setup and reboot, add the following kernel
+command line option:
+
+* `ic.setupos.stop_before_installation`.
+
+All together, you can add the following options to the `extra_boot_args` file to get an interactive
+setup process for testing without onscreen errors:
+
+```
+ic.setupos.check_hardware=0 ic.setupos.check_network=0 ic.setupos.stop_before_installation
+```
+
 == Under the hood: Installation
 
 The SetupOS installation is initiated by the systemd service unit file `setupos.service`. This service is of type idle, which means the installation is triggered only after every other unit has either completed or started.
