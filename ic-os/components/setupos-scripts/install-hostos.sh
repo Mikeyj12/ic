@@ -10,6 +10,7 @@ function install_hostos() {
     echo "* Installing HostOS disk-image..."
 
     target_drive=$(find_first_drive)
+    echo "* HostOS will be deployed to ${target_drive}"
 
     TMPDIR=$(mktemp -d)
     tar xafS /data/host-os.img.tar.zst -C "${TMPDIR}" disk.img
