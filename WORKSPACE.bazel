@@ -129,7 +129,7 @@ oci_pull(
 # used by rosetta image
 oci_pull(
     name = "rust_base",
-    image = "gcr.io/distroless/cc-debian11@sha256:8e94f031353596c3fc9db6a2499bcc82dacc40cb71e0703476f9fad41677efdf",
+    image = "gcr.io/distroless/cc-debian12@sha256:e41df57007e3b91e3d52b78c65751eb72294206ac10dc2af5fc3a023d012e279",
     platforms = ["linux/amd64"],
 )
 
