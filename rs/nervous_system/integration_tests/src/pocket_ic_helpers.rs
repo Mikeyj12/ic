@@ -466,7 +466,7 @@ pub fn install_sns_directly_with_snsw_versions(
         index_sns_wasm,
         archive_sns_wasm,
     ) = {
-        let latest_version = nns::sns_wasm::get_lastest_sns_version(pocket_ic);
+        let latest_version = nns::sns_wasm::get_latest_sns_version(pocket_ic);
         (
             nns::sns_wasm::get_wasm(pocket_ic, latest_version.root_wasm_hash),
             nns::sns_wasm::get_wasm(pocket_ic, latest_version.governance_wasm_hash),
@@ -1024,7 +1024,7 @@ pub mod nns {
         }
 
         /// Get the latest version of SNS from SNS-W
-        pub fn get_lastest_sns_version(pocket_ic: &PocketIc) -> Version {
+        pub fn get_latest_sns_version(pocket_ic: &PocketIc) -> Version {
             let request = ListUpgradeStepsRequest {
                 starting_at: None,
                 sns_governance_canister_id: None,
