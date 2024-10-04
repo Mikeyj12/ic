@@ -12,7 +12,7 @@ use ic_sns_wasm::pb::v1::SnsCanisterType;
 use pocket_ic::PocketIcBuilder;
 use std::time::Duration;
 
-const TICKS_PER_TASK: u64 = 2;
+const TICKS_PER_TASK: u64 = 10;
 
 #[test]
 fn test_get_upgrade_journal() {
@@ -34,14 +34,14 @@ fn test_get_upgrade_journal() {
         );
     };
 
-    // Install the (mainnet) NNS canisters.
+    // Install the NNS canisters.
     let with_mainnet_nns_canisters = false;
     install_nns_canisters(&pocket_ic, vec![], with_mainnet_nns_canisters, None, vec![]);
 
-    // Publish (mainnet) SNS Wasms to SNS-W.
-    let with_mainnet_sns_wasms = false;
+    // Publish SNS Wasms to SNS-W.
+    let with_mainnet_sns_canisters = false;
     let deployed_sns_starting_info =
-        add_wasms_to_sns_wasm(&pocket_ic, with_mainnet_sns_wasms).unwrap();
+        add_wasms_to_sns_wasm(&pocket_ic, with_mainnet_sns_canisters).unwrap();
     let initial_sns_version = nns::sns_wasm::get_latest_sns_version(&pocket_ic);
 
     // Deploy an SNS instance via proposal.
@@ -95,26 +95,26 @@ fn test_get_upgrade_journal() {
 
     // Publish a new SNS version.
     let (new_sns_version_1, new_sns_version_2) = {
-        let (_, original_ledger_wasm) = deployed_sns_starting_info
-            .get(&SnsCanisterType::Ledger)
+        let (_, original_root_wasm) = deployed_sns_starting_info
+            .get(&SnsCanisterType::Root)
             .unwrap();
 
         let new_sns_version_1 = {
-            let ledger_wasm = create_modified_sns_wasm(original_ledger_wasm, Some(1));
-            add_wasm_via_nns_proposal(&pocket_ic, ledger_wasm.clone()).unwrap();
-            let ledger_wasm_hash = ledger_wasm.sha256_hash().to_vec();
+            let root_wasm = create_modified_sns_wasm(original_root_wasm, Some(1));
+            add_wasm_via_nns_proposal(&pocket_ic, root_wasm.clone()).unwrap();
+            let root_wasm_hash = root_wasm.sha256_hash().to_vec();
             sns_pb::governance::Version {
-                ledger_wasm_hash,
+                root_wasm_hash,
                 ..initial_sns_version.clone()
             }
         };
 
         let new_sns_version_2 = {
-            let ledger_wasm = create_modified_sns_wasm(original_ledger_wasm, Some(2));
-            add_wasm_via_nns_proposal(&pocket_ic, ledger_wasm.clone()).unwrap();
-            let ledger_wasm_hash = ledger_wasm.sha256_hash().to_vec();
+            let root_wasm = create_modified_sns_wasm(original_root_wasm, Some(2));
+            add_wasm_via_nns_proposal(&pocket_ic, root_wasm.clone()).unwrap();
+            let root_wasm_hash = root_wasm.sha256_hash().to_vec();
             sns_pb::governance::Version {
-                ledger_wasm_hash,
+                root_wasm_hash,
                 ..new_sns_version_1.clone()
             }
         };
@@ -135,7 +135,35 @@ fn test_get_upgrade_journal() {
 
         assert_eq!(
             upgrade_steps.versions,
-            vec![initial_sns_version, new_sns_version_1, new_sns_version_2,]
+            vec![
+                initial_sns_version.clone(),
+                new_sns_version_1.clone(),
+                new_sns_version_2.clone()
+            ]
         );
+    }
+
+    println!(
+        "initial_sns_version.root_wasm_hash = {:?}",
+        initial_sns_version.root_wasm_hash
+    );
+    println!(
+        "new_sns_version_1.root_wasm_hash = {:?}",
+        new_sns_version_1.root_wasm_hash
+    );
+    println!(
+        "new_sns_version_2.root_wasm_hash = {:?}",
+        new_sns_version_2.root_wasm_hash
+    );
+
+    wait_for_next_periodic_task(6 * 60); // 6 min
+    wait_for_next_periodic_task(6 * 60); // 6 min
+
+    {
+        let sns_pb::GetRunningSnsVersionResponse {
+            deployed_version, ..
+        } = sns::governance::get_running_sns_version(&pocket_ic, sns.governance.canister_id);
+        let deployed_version = deployed_version.unwrap();
+        assert_eq!(deployed_version, new_sns_version_2);
     }
 }
