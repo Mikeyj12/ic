@@ -265,7 +265,7 @@ type GetSnsInitializationParametersResponse = record {
 };
 
 type CachedUpgradeSteps = record {
-  upgrade_steps : vec Version;
+  upgrade_steps : opt Versions;
   requested_timestamp_seconds : opt nat64;
   response_timestamp_seconds : opt nat64;
 };
@@ -693,6 +693,8 @@ type Version = record {
   governance_wasm_hash : blob;
   index_wasm_hash : blob;
 };
+
+type Versions = record { versions : vec Version };
 
 type VotingRewardsParameters = record {
   final_reward_rate_basis_points : opt nat64;

@@ -514,7 +514,7 @@ pub(crate) struct GetNextSnsVersionResponse {
 /// Avoid using outside of tests and the functions in this file.
 /// Specifies the version of an SNS.
 #[derive(Clone, Eq, PartialEq, Hash, ::prost::Message, candid::CandidType, candid::Deserialize)]
-pub(crate) struct SnsVersion {
+pub struct SnsVersion {
     /// The hash of the Root canister WASM.
     #[prost(bytes = "vec", tag = "1")]
     pub root_wasm_hash: ::prost::alloc::vec::Vec<u8>,
@@ -640,20 +640,20 @@ pub struct GetProposalIdThatAddedWasmResponse {
     pub proposal_id: ::core::option::Option<u64>,
 }
 
-#[derive(Clone, PartialEq, candid::CandidType, candid::Deserialize)]
-pub(crate) struct ListUpgradeStepsRequest {
+#[derive(Clone, PartialEq, candid::CandidType, candid::Deserialize, Debug)]
+pub struct ListUpgradeStepsRequest {
     /// If provided, limit response to only include entries for this version and later
-    pub(crate) starting_at: ::core::option::Option<SnsVersion>,
+    pub starting_at: ::core::option::Option<SnsVersion>,
     /// If provided, give responses that this canister would get back
-    pub(crate) sns_governance_canister_id: ::core::option::Option<::ic_base_types::PrincipalId>,
+    pub sns_governance_canister_id: ::core::option::Option<::ic_base_types::PrincipalId>,
     /// Limit to number of entries (for paging)
-    pub(crate) limit: u32,
+    pub limit: u32,
 }
 #[derive(candid::CandidType, candid::Deserialize, Debug)]
-pub(crate) struct ListUpgradeStepsResponse {
-    pub(crate) steps: ::prost::alloc::vec::Vec<ListUpgradeStep>,
+pub struct ListUpgradeStepsResponse {
+    pub steps: ::prost::alloc::vec::Vec<ListUpgradeStep>,
 }
 #[derive(candid::CandidType, candid::Deserialize, Debug)]
-pub(crate) struct ListUpgradeStep {
-    pub(crate) version: ::core::option::Option<SnsVersion>,
+pub struct ListUpgradeStep {
+    pub version: ::core::option::Option<SnsVersion>,
 }

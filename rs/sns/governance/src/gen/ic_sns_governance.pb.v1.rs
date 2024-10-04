@@ -1914,9 +1914,21 @@ pub mod governance {
         PartialEq,
         ::prost::Message,
     )]
-    pub struct CachedUpgradeSteps {
+    pub struct Versions {
         #[prost(message, repeated, tag = "1")]
-        pub upgrade_steps: ::prost::alloc::vec::Vec<Version>,
+        pub versions: ::prost::alloc::vec::Vec<Version>,
+    }
+    #[derive(
+        candid::CandidType,
+        candid::Deserialize,
+        comparable::Comparable,
+        Clone,
+        PartialEq,
+        ::prost::Message,
+    )]
+    pub struct CachedUpgradeSteps {
+        #[prost(message, optional, tag = "1")]
+        pub upgrade_steps: ::core::option::Option<Versions>,
         #[prost(uint64, optional, tag = "2")]
         pub requested_timestamp_seconds: ::core::option::Option<u64>,
         #[prost(uint64, optional, tag = "3")]
