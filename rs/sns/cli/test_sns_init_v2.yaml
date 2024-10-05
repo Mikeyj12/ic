@@ -75,13 +75,13 @@ Distribution:
     total: 129.9 tokens # 60 + 40 + 15 + 14.9
 
 Swap:
-    minimum_participants: 50
+    minimum_participants: 52
 
     minimum_direct_participation_icp: 113 tokens
     maximum_direct_participation_icp: 64990 tokens
 
-    minimum_participant_icp: 650 tokens
-    maximum_participant_icp: 6500 tokens
+    minimum_participant_icp: 50000 tokens
+    maximum_participant_icp: 500000 tokens
 
     confirmation_text: Hello, world?
 
@@ -94,6 +94,6 @@ Swap:
         interval: 17 days
 
     start_time: 12:00 UTC
-    duration: 7 days
+    duration: 14 days
 
     neurons_fund_participation: true
